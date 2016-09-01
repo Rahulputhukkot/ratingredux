@@ -101,6 +101,9 @@ export default class App extends Component {
                   Logout
                 </NavItem>
               </LinkContainer>}
+              <LinkContainer to="/listRatings">
+                <NavItem eventKey={7}>List Ratings</NavItem>
+              </LinkContainer>
             </Nav>
             {user &&
             <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.name}</strong>.</p>}
@@ -111,7 +114,6 @@ export default class App extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-
         <div className={styles.appContent}>
           {this.props.children}
         </div>
