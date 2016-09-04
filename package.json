@@ -66,9 +66,9 @@
       }
     },
     "start-dev-api": {
-      "command": "node ./bin/api.js",
+      "command": "node ./api/ratings/server.js",
       "env": {
-        "NODE_PATH": "./api",
+        "NODE_PATH": "./api/ratings",
         "NODE_ENV": "development",
         "APIPORT": 3030
       }
@@ -108,8 +108,9 @@
     "express-session": "^1.12.1",
     "file-loader": "^0.8.5",
     "hoist-non-react-statics": "^1.0.3",
-    "http-proxy": "^1.12.0",
+    "http-proxy": "^1.14.0",
     "invariant": "^2.2.0",
+    "jquery": "^3.1.0",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
     "lru-memoize": "^1.0.0",

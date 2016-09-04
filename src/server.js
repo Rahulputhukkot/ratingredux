@@ -25,17 +25,17 @@ const app = new Express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer({
   target: targetUrl,
-  ws: true
+  ws: true,
 });
-
+const newUrl = 'http://localhost:3030/api/ratings';
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));
 
 app.use(Express.static(path.join(__dirname, '..', 'static')));
 
 // Proxy to API server
-app.use('/api', (req, res) => {
-  proxy.web(req, res, {target: targetUrl});
+app.use('/api/ratings', (req, res) => {
+  proxy.web(req, res, { target: newUrl });
 });
 
 app.use('/ws', (req, res) => {

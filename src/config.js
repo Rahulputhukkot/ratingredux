@@ -35,5 +35,8 @@ module.exports = Object.assign({
       ]
     }
   },
+  ratings: {
+    filename: 'ratings.json'
+  }
 
 }, environment);
