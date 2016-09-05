@@ -13,6 +13,7 @@
 }
 .display {
   width: 80%;
+  margin-bottom: 1px;
   table {
       font-family: arial, sans-serif;
       border-collapse: collapse;
@@ -52,5 +53,8 @@
   }
   button {
     width: 100%;
+  }
+  h4 {
+    font-weight: bold;
   }
 }
