@@ -12,19 +12,45 @@
   }
 }
 .display {
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
+  width: 80%;
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+  }
+
+  tr {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+  .sameRow {
+    width: 80%;
+    display: flex;
+    border: 1px solid black;
+  }
+  .first,.second, .third {
+    border: 1px solid black;
+    text-align: center;
+  }
+  .first {
+    width: 30%;
+  }
+  .second {
+    width: 10%;
+  }
+  .third {
+    width: 50%;
+  }
+  .buttonStyle {
+    text-align: center;
+    border: 1px solid black;
+    width: 10%;
+  }
+  button {
     width: 100%;
-}
-
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
+  }
 }
