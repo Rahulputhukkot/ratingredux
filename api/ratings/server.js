@@ -29,8 +29,11 @@ app.post('/api/ratings', function(req, res) {
       res.json(JSON.parse(data));
     } else if (req.body.type === 'write') {
       var rates = JSON.parse(data);
+      var d = new Date();
+      const datenew = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
       var newRates = {
         id: Date.now(),
+        timestamp: datenew,
         rating: req.body.rating,
         description: req.body.description,
         email: req.body.email,
@@ -42,7 +45,7 @@ app.post('/api/ratings', function(req, res) {
           process.exit(1);
         }
 
-        res.json(rates);
+        res.json(data);
       });
     }
   });

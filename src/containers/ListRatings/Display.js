@@ -6,7 +6,11 @@ export default class Display extends Component {
     email: React.PropTypes.string.isRequired,
     rating: React.PropTypes.number,
     description: React.PropTypes.string.isRequired,
+    timestamp: React.PropTypes.string,
   };
+  handleDelete(e) {
+    console.log(e.target.id);
+  }
   render() {
     const style = require('./ListRatings.scss');
     return (
@@ -24,7 +28,7 @@ export default class Display extends Component {
               {this.props.description}
             </div>
             <div className={style.buttonStyle}>
-              <Link to ="/listRatings"><button >Delete</button></Link>
+              <button id={this.props.timestamp} onClick={this.handleDelete.bind(this)}>Delete</button>
             </div>
           </div>
           </tr>

@@ -17,19 +17,31 @@ export default class RateEnter extends Component {
     this.setState({description: descr.target.value});
   }
   handleEmailChange(event) {
-    this.setState({email: event.target.value});
+    this.setState({ email: event.target.value });
   }
+
   handleRatingChange(event) {
-    this.setState({rating: event.target.value});
+    this.setState({ rating: event.target.value });
   }
   handleSubmit(event) {
     event.preventDefault();
+    const regrate = /^[1-5]$/;
+    if (!regrate.test(this.state.rating)) {
+      document.getElementsByClassName('err_rating')[0].style.display = 'block';
+      document.getElementsByClassName('err_rating')[0].innerHTML = 'Invalid Rating';
+      return false;
+    }
+    document.getElementsByClassName('err_rating')[0].style.display = 'none';
+    const regmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!regmail.test(this.state.email)) {
+      document.getElementsByClassName('err_email')[0].style.display = 'block';
+      document.getElementsByClassName('err_email')[0].innerHTML = 'Invalid Email ID';
+      return false;
+    }
+    document.getElementsByClassName('err_email')[0].style.display = 'none';
     const rating = this.state.rating;
     const description = this.state.description.trim();
     const email = this.state.email.trim();
-    console.log(rating);
-    console.log(description);
-    console.log(email);
     this.props.onRatingSubmit({rating: rating, description: description, email: email});
     this.setState({rating: '', description: '', email: ''});
   }
@@ -42,13 +54,18 @@ export default class RateEnter extends Component {
         <div>
           <form className="login-form" onSubmit={this.handleSubmit.bind(this)} id="ratebox">
             <div className="ratingArea">
-              <input type="number" placeholder="Enter Rating" value={this.state.rating} onChange={this.handleRatingChange.bind(this)}/>
+              <b>Rating: </b>
+              <input type="text" placeholder="Enter Rating" value={this.state.rating} onChange={this.handleRatingChange.bind(this)}/>
+              <div className="err_rating" ></div>
             </div><br/>
-            <div className="textarea">
-              <textarea id="description" rows="3" cols="30" value={this.state.description} onChange={this.handleDescChange.bind(this)} />
-            </div>
             <div className="form-group">
-              <input type="email" ref="email" placeholder="Enter email-id" value={this.state.email} onChange={this.handleEmailChange.bind(this)}/>
+              <b>Email ID: </b>
+              <input type="text" placeholder="Enter email-id" value={this.state.email} onChange={this.handleEmailChange.bind(this)}/>
+                <div className="err_email"></div>
+            </div>
+            <div className="textarea">
+              <label><b>Enter a description: </b></label><br/>
+              <textarea id="description" rows="3" cols="30" value={this.state.description} onChange={this.handleDescChange.bind(this)} />
             </div>
             <button className="btn btn-success">Add Rating</button>
           </form>
