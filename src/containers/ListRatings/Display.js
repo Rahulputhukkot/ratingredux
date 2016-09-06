@@ -5,7 +5,7 @@ export default class Display extends Component {
   static propTypes = {
     email: React.PropTypes.string.isRequired,
     rating: React.PropTypes.number,
-    description: React.PropTypes.string.isRequired,
+    desc: React.PropTypes.string.isRequired,
     timestamp: React.PropTypes.string,
   };
   handleDelete(e) {
@@ -25,7 +25,7 @@ export default class Display extends Component {
               {this.props.rating}
             </div>
             <div className={style.third}>
-              {this.props.description}
+              {this.props.desc}
             </div>
             <div className={style.buttonStyle}>
               <button id={this.props.timestamp} onClick={this.handleDelete.bind(this)}>Delete</button>

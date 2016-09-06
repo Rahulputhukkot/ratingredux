@@ -1,36 +1,41 @@
 import React, {Component} from 'react';
-import Display from './Display.js';
+const Style = require('./ListRatings.scss');
 
 export default class RateDisplay extends Component {
   static propTypes = {
-    data: React.PropTypes.array.isRequired,
+    data: React.PropTypes.string,
   };
   render() {
-    const displayNodes = this.props.data.map((rates) => {
-      return (<Display rating={rates.rating} description={rates.description} email ={rates.email} key={rates.id} timestamp={rates.id}/>);
+    const style = {
+      width: '30px',
+    };
+    const itemsdata = [];
+    console.log(this.props.data);
+    this.props.data.map(function myfunc(ratingdata) {
+      return (
+        itemsdata.push(
+          <tr>
+           <td>{ratingdata.rating}</td>
+           <td>{ratingdata.email}</td>
+           <td id={Style.id5}>{ratingdata.desc}</td>
+           <td style={style}><button>Delete Rating</button></td>
+         </tr>
+       )
+     );
     });
-    const style = require('./ListRatings.scss');
     return (
-      <div className="DisplayList">
-        <div className={style.display}>
-          <table>
-            <tr>
-              <div className={style.sameRow} >
-              <div className={style.first}>
-                <h4>Email</h4>
-              </div>
-              <div className={style.second}>
-                <h4>Rating</h4>
-              </div>
-              <div className={style.third}>
-                <h4>Description</h4>
-              </div>
-            </div>
-            </tr>
-          </table>
-        </div>
-        {displayNodes}
-      </div>
+      <table id={Style.id1}>
+        <thead>
+          <tr>
+            <th>Rating</th>
+            <th>E-mail</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {itemsdata}
+        </tbody>
+      </table>
     );
   }
 }

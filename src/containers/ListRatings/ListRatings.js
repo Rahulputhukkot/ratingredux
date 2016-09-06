@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RateEnter from './RateEnter';
 import RateDisplay from './RateDisplay';
-import $ from 'jquery';
+import $$ from 'jquery';
 
 export default class ListRatings extends Component {
   constructor() {
@@ -18,7 +18,7 @@ export default class ListRatings extends Component {
   loadRatingFromServer() {
     const newdata = {};
     newdata.type = 'read';
-    $.ajax({
+    $$.ajax({
       url: '/api/ratings',
       dataType: 'json',
       type: 'POST',
@@ -39,7 +39,7 @@ export default class ListRatings extends Component {
     rating.type = 'write';
     const newRates = rates.concat([rating]);
     this.setState({ data: newRates });
-    $.ajax({
+    $$.ajax({
       url: '/api/ratings',
       dataType: 'json',
       type: 'POST',

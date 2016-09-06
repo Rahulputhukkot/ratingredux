@@ -9,7 +9,6 @@ const RATINGS_FILE = path.join(__dirname, config.ratings.filename);
 
 app.set('port', (process.env.PORT || 3030));
 
-//app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next) {
@@ -35,7 +34,7 @@ app.post('/api/ratings', function(req, res) {
         id: Date.now(),
         timestamp: datenew,
         rating: req.body.rating,
-        description: req.body.description,
+        desc: req.body.desc,
         email: req.body.email,
       };
       rates.push(newRates);
@@ -44,8 +43,7 @@ app.post('/api/ratings', function(req, res) {
           console.error(err);
           process.exit(1);
         }
-
-        res.json(data);
+        res.json(rates);
       });
     }
   });

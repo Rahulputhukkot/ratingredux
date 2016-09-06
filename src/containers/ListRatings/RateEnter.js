@@ -8,13 +8,13 @@ export default class RateEnter extends Component {
     super(props);
     this.state = {
       rating: '',
-      description: '',
+      desc: '',
       email: '',
     };
   }
   handleDescChange(descr) {
     if (descr.target.value.length > 256) { return false;}
-    this.setState({description: descr.target.value});
+    this.setState({desc: descr.target.value});
   }
   handleEmailChange(event) {
     this.setState({ email: event.target.value });
@@ -40,10 +40,11 @@ export default class RateEnter extends Component {
     }
     document.getElementsByClassName('err_email')[0].style.display = 'none';
     const rating = this.state.rating;
-    const description = this.state.description.trim();
+    const desc = this.state.desc.trim();
     const email = this.state.email.trim();
-    this.props.onRatingSubmit({rating: rating, description: description, email: email});
-    this.setState({rating: '', description: '', email: ''});
+    this.props.onRatingSubmit({rating: rating, desc: desc, email: email});
+    document.getElementById('ratebox').reset();
+    this.setState({rating: '', desc: '', email: ''});
   }
   render() {
     const style = require('./ListRatings.scss');
@@ -65,7 +66,7 @@ export default class RateEnter extends Component {
             </div>
             <div className="textarea">
               <label><b>Enter a description: </b></label><br/>
-              <textarea id="description" rows="3" cols="30" value={this.state.description} onChange={this.handleDescChange.bind(this)} />
+              <textarea id="description" rows="3" cols="30" value={this.state.desc} onChange={this.handleDescChange.bind(this)} />
             </div>
             <button className="btn btn-success">Add Rating</button>
           </form>
