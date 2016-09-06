@@ -57,8 +57,8 @@ app.post('/api/ratings', function processRatings(req, res) {
         desc: req.body.desc,
       };
       const rowToWrite = Object.values(valueToSave).map(value => encodeURIComponent(value)).join(',');
-      rowToWrite.concat('\n');
-      fs.writeFile(RATINGS_FILE, data.concat(rowToWrite), function writeCallback(writeError) {
+      const newRates = rates + rowToWrite + '\n';
+      fs.writeFile(RATINGS_FILE, newRates, function writeCallback(writeError) {
         if (writeError) {
           console.error(writeError);
           process.exit(1);

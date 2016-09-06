@@ -15,6 +15,10 @@ export default class ListRatings extends Component {
     this.loadRatingFromServer();
   }
 
+  componentDidUpdate() {
+    this.loadRatingFromServer();
+  }
+
   loadRatingFromServer() {
     const newdata = {};
     newdata.type = 'read';

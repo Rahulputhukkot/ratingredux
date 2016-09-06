@@ -38,9 +38,9 @@ app.use('/api/ratings', (req, res) => {
   proxy.web(req, res, { target: newUrl });
 });
 
-app.use('/ws', (req, res) => {
-  proxy.web(req, res, {target: targetUrl + '/ws'});
-});
+// app.use('/ws', (req, res) => {
+//   proxy.web(req, res, {target: targetUrl + '/ws'});
+// });
 
 server.on('upgrade', (req, socket, head) => {
   proxy.ws(req, socket, head);
