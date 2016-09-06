@@ -10,7 +10,6 @@ export default class RateDisplay extends Component {
       width: '30px',
     };
     const itemsdata = [];
-    console.log(this.props.data);
     this.props.data.map(function myfunc(ratingdata) {
       return (
         itemsdata.push(

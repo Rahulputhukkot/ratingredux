@@ -1,9 +1,12 @@
-var fs = require('fs');
-var path = require('path');
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-var config = require('../../src/config.js');
+/* eslint-disable */
+'use strict';
+/* eslint-enable */
+const fs = require('fs');
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const config = require('../../src/config.js');
 
 const RATINGS_FILE = path.join(__dirname, config.ratings.filename);
 
@@ -11,44 +14,61 @@ app.set('port', (process.env.PORT || 3030));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(function(req, res, next) {
+app.use(function allowCors(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
 
 
-app.post('/api/ratings', function(req, res) {
-  fs.readFile(RATINGS_FILE, function(err, data) {
-    if (err) {
-      console.error(err);
+app.post('/api/ratings', function processRatings(req, res) {
+  fs.readFile(RATINGS_FILE, 'utf8', function readCallback(readError, data) {
+    if (readError) {
+      console.error(readError);
       process.exit(1);
     }
     if (req.body.type === 'read') {
-      res.json(JSON.parse(data));
+      const rowRead = data;
+      const sp = rowRead.split('\n').slice(0, -1);
+      const newData = [];
+      const keys = ['email', 'rating', 'timestamp', 'desc'];
+      let valueToReturn;
+      sp.forEach(line => {
+        valueToReturn = {};
+        line.split(',').forEach((value, index) => (valueToReturn[keys[index]] = decodeURIComponent(value)));
+        newData.push(valueToReturn);
+      });
+      res.json(newData);
     } else if (req.body.type === 'write') {
-      var rates = JSON.parse(data);
-      var d = new Date();
-      const datenew = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-      var newRates = {
-        id: Date.now(),
-        timestamp: datenew,
-        rating: req.body.rating,
-        desc: req.body.desc,
+      const rates = data;
+      const presentDate = new Date();
+      const dateParts = [
+        presentDate.getFullYear(),
+        presentDate.getMonth(),
+        presentDate.getDate(),
+        presentDate.getHours(),
+        presentDate.getMinutes(),
+        presentDate.getSeconds()
+      ];
+      const valueToSave = {
         email: req.body.email,
+        rating: req.body.rating,
+        timestamp: `${dateParts[0]}-${dateParts[1]}-${dateParts[2]} ${dateParts[3]}:${dateParts[4]}:${dateParts[5]}`,
+        desc: req.body.desc,
       };
-      rates.push(newRates);
-      fs.writeFile(RATINGS_FILE, JSON.stringify(rates, null, 4), function(err) {
-        if (err) {
-          console.error(err);
+      const rowToWrite = Object.values(valueToSave).map(value => encodeURIComponent(value)).join(',');
+      rowToWrite.concat('\n');
+      fs.writeFile(RATINGS_FILE, data.concat(rowToWrite), function writeCallback(writeError) {
+        if (writeError) {
+          console.error(writeError);
           process.exit(1);
         }
-        res.json(rates);
+        res.json([valueToSave]);
       });
     }
   });
 });
 
-app.listen(app.get('port'), function() {
+app.listen(app.get('port'), function appStartCallback() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
