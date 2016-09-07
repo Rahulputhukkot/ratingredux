@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import $$ from 'jquery';
 
 export default class Display extends Component {
   static propTypes = {
@@ -10,6 +10,21 @@ export default class Display extends Component {
   };
   handleDelete(e) {
     console.log(e.target.id);
+    const newdata = {};
+    newdata.type = 'update';
+    $$.ajax({
+      url: '/api/ratings',
+      dataType: 'json',
+      type: 'POST',
+      data: newdata,
+      success: (data) => {
+        this.setState({ data: data });
+      },
+
+      error: (xhr, status, err) => {
+        console.error('/api/ratings', status, err.toString());
+      },
+    });
   }
   render() {
     const style = require('./ListRatings.scss');

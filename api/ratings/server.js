@@ -65,6 +65,30 @@ app.post('/api/ratings', function processRatings(req, res) {
         }
         res.json([valueToSave]);
       });
+    } else if (req.body.type === 'update') {
+      const rowRead = data;
+      const sp = rowRead.split('\n').slice(0, -1);
+      let newData;
+      const keys = ['email', 'rating', 'timestamp', 'desc'];
+      let valueToReturn;
+      let updateValue = '';
+      sp.forEach(line => {
+        valueToReturn = {};
+        newData =[];
+        line.split(',').forEach((value, index) => (valueToReturn[keys[index]] = decodeURIComponent(value)));
+        if (!(valueToReturn.timestamp === req.body.timestamp)) {
+          updateValue = updateValue + line + '\n';
+          newData.push(valueToReturn);
+        }
+      });
+      console.log(updateValue);
+      fs.writeFile(RATINGS_FILE, updateValue, function writeCallback(writeError) {
+        if (writeError) {
+          console.error(writeError);
+          process.exit(1);
+        }
+        res.json(newData);
+      });
     }
   });
 });
