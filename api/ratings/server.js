@@ -74,14 +74,13 @@ app.post('/api/ratings', function processRatings(req, res) {
       let updateValue = '';
       sp.forEach(line => {
         valueToReturn = {};
-        newData =[];
+        newData = [];
         line.split(',').forEach((value, index) => (valueToReturn[keys[index]] = decodeURIComponent(value)));
         if (!(valueToReturn.timestamp === req.body.timestamp)) {
           updateValue = updateValue + line + '\n';
           newData.push(valueToReturn);
         }
       });
-      console.log(updateValue);
       fs.writeFile(RATINGS_FILE, updateValue, function writeCallback(writeError) {
         if (writeError) {
           console.error(writeError);

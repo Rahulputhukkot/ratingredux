@@ -1,76 +1,114 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 import Helmet from 'react-helmet';
-export default class RateEnter extends Component {
-  static propTypes= {
-    onRatingSubmit: React.PropTypes.func,
+const hStyle = {
+  paddingLeft: '20%'
+};
+export default class RatingForm extends Component {
+
+  static propTypes = {
+    onRatingSubmit: React.PropTypes.func
   };
-  constructor(props) {
-    super(props);
-    this.state = {
-      rating: '',
-      desc: '',
-      email: '',
-    };
+
+  constructor() {
+    super();
+    this.state = { email: '', rating: '', desc: '', descleng: 256 };
   }
-  handleDescChange(descr) {
-    if (descr.target.value.length > 256) { return false;}
-    this.setState({desc: descr.target.value});
+
+  getValidationStateEmail() {
+    const regmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (regmail.test(this.state.email)) return 'success';
+    else if (this.state.email !== '') return 'error';
   }
-  handleEmailChange(event) {
+
+  getValidationStateRate() {
+    const regrate = /^[1-5]$/;
+    if (regrate.test(this.state.rating)) return 'success';
+    else if (this.state.rating !== '') return 'error';
+  }
+
+  handleChangeEmail(event) {
     this.setState({ email: event.target.value });
   }
 
-  handleRatingChange(event) {
+  handleChangeRate(event) {
     this.setState({ rating: event.target.value });
   }
-  handleSubmit(event) {
-    event.preventDefault();
-    const regrate = /^[1-5]$/;
-    if (!regrate.test(this.state.rating)) {
-      document.getElementsByClassName('err_rating')[0].style.display = 'block';
-      document.getElementsByClassName('err_rating')[0].innerHTML = 'Invalid Rating';
-      return false;
-    }
-    document.getElementsByClassName('err_rating')[0].style.display = 'none';
-    const regmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!regmail.test(this.state.email)) {
-      document.getElementsByClassName('err_email')[0].style.display = 'block';
-      document.getElementsByClassName('err_email')[0].innerHTML = 'Invalid Email ID';
-      return false;
-    }
-    document.getElementsByClassName('err_email')[0].style.display = 'none';
-    const rating = this.state.rating;
-    const desc = this.state.desc.trim();
-    const email = this.state.email.trim();
-    this.props.onRatingSubmit({rating: rating, desc: desc, email: email});
-    document.getElementById('ratebox').reset();
-    this.setState({rating: '', desc: '', email: ''});
+
+  handleChangeText(event) {
+    this.setState({ desc: event.target.value });
+    this.setState({ descleng: (256 - (event.target.value.length)) });
   }
+
+  handleSubmit(obj) {
+    obj.preventDefault();
+    const ratingdata = { email: this.state.email, rating: this.state.rating, desc: this.state.desc };
+    this.props.onRatingSubmit(ratingdata);
+    document.getElementById('form').reset();
+  }
+
   render() {
-    const style = require('./ListRatings.scss');
-    return (
-      <div className={style.loginPage + ' container'}>
-        <Helmet title="Ratings page"/>
-        <h1>Ratings Page</h1>
-        <div>
-          <form className="login-form" onSubmit={this.handleSubmit.bind(this)} id="ratebox">
-            <div className="ratingArea">
-              <b>Rating: </b>
-              <input type="text" placeholder="Enter Rating" value={this.state.rating} onChange={this.handleRatingChange.bind(this)}/>
-              <div className="err_rating" ></div>
-            </div><br/>
-            <div className="form-group">
-              <b>Email ID: </b>
-              <input type="text" placeholder="Enter email-id" value={this.state.email} onChange={this.handleEmailChange.bind(this)}/>
-                <div className="err_email"></div>
-            </div>
-            <div className="textarea">
-              <label><b>Enter a description: </b></label><br/>
-              <textarea id="description" rows="3" cols="30" value={this.state.desc} onChange={this.handleDescChange.bind(this)} />
-            </div>
-            <button className="btn btn-success">Add Rating</button>
-          </form>
-        </div>
+    return (<div>
+      <Helmet title="Ratings page"/>
+      <h1 style ={hStyle} >Ratings Page</h1>
+
+      <Form horizontal onSubmit={this.handleSubmit.bind(this)} id="form">
+
+        <FormGroup controlId="formHorizontalEmail" validationState={this.getValidationStateEmail()}>
+          <Col componentClass={ControlLabel} sm={2}>
+            Email
+          </Col>
+          <Col sm={5}>
+            <FormControl
+              type="text"
+              email={this.state.email}
+              placeholder="Email"
+              onChange={this.handleChangeEmail.bind(this)}
+            />
+          <FormControl.Feedback />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formHorizontalRating" validationState={this.getValidationStateRate()}>
+          <Col componentClass={ControlLabel} sm={2}>
+            Rating
+          </Col>
+          <Col sm={5}>
+            <FormControl
+              type="text"
+              rating={this.state.rating}
+              placeholder="Rating"
+              onChange={this.handleChangeRate.bind(this)}
+             />
+           <FormControl.Feedback />
+          </Col>
+        </FormGroup>
+
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Description
+          </Col>
+          <Col sm={10}>
+            <textarea
+              rows="4" cols="62"
+              maxLength="256"
+              onChange={this.handleChangeText.bind(this)}
+              placeholder="Description">
+            </textarea>
+            {this.state.descleng}
+          </Col>
+        </FormGroup>
+
+        <FormGroup>
+          <Col smOffset={2} sm={10}>
+            <Button bsStyle="primary" type="submit">
+              Rate
+            </Button>
+          </Col>
+        </FormGroup>
+      </Form>
       </div>
     );
   }

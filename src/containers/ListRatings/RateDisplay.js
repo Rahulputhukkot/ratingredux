@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import $$ from 'jquery';
+import React, { Component } from 'react';
+import { Button, Table } from 'react-bootstrap';
+import jquery from 'jquery';
 
-const Style = require('./ListRatings.scss');
 
-export default class RateDisplay extends Component {
+export default class RatingDisplay extends Component {
   static propTypes = {
     data: React.PropTypes.array,
   };
   handleDelete(event) {
     const newdata = {timestamp: event};
     newdata.type = 'update';
-    $$.ajax({
+    jquery.ajax({
       url: '/api/ratings',
       dataType: 'json',
       type: 'POST',
@@ -25,35 +25,33 @@ export default class RateDisplay extends Component {
     });
   }
   render() {
-    const style = {
-      width: '30px',
-    };
     const itemsdata = [];
-    this.props.data.map(function myfunc(ratingdata, key) {
+    this.props.data.map(function mapFun(ratingdata, key) {
       return (
-        itemsdata.push(
-          <tr key ={key}>
+       itemsdata.push(
+         <tr key = {key}>
            <td>{ratingdata.rating}</td>
            <td>{ratingdata.email}</td>
            <td>{ratingdata.desc}</td>
-           <td style={style}><button onClick={this.handleDelete.bind(this, ratingdata.timestamp)}>Delete Rating</button></td>
+           <td><Button bsStyle="danger" onClick={this.handleDelete.bind(this, ratingdata.timestamp)}>Delete</Button></td>
          </tr>
-       )
+      )
      );
     }, this);
+
     return (
-      <table id={Style.id1}>
-        <thead>
-          <tr>
-            <th>Rating</th>
-            <th>E-mail</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {itemsdata}
-        </tbody>
-      </table>
-    );
+    <Table>
+      <thead>
+        <tr>
+          <th>Rating</th>
+          <th>E-mail</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {itemsdata}
+      </tbody>
+      </Table>
+   );
   }
 }
