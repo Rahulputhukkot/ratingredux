@@ -38,9 +38,12 @@ export default class RatingForm extends Component {
 
   handleSubmit(obj) {
     obj.preventDefault();
+    if (this.getValidationStateEmail() === 'error') { return false; }
+    if (this.getValidationStateRate() === 'error') { return false; }
     const ratingdata = { email: this.state.email, rating: this.state.rating, desc: this.state.desc };
     this.props.onRatingSubmit(ratingdata);
     document.getElementById('form').reset();
+    this.setState({ email: '', rating: '', desc: '', descleng: 256 });
   }
 
   render() {
