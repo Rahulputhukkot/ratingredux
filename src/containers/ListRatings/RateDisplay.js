@@ -2,26 +2,18 @@ import React, { Component } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import jquery from 'jquery';
 
-
 export default class RatingDisplay extends Component {
-  static propTypes = {
-    data: React.PropTypes.array,
-  };
+  static propTypes = { data: React.PropTypes.array };
   handleDelete(event) {
-    const newdata = {timestamp: event};
+    const newdata = { timestamp: event };
     newdata.type = 'update';
     jquery.ajax({
       url: '/api/ratings',
       dataType: 'json',
       type: 'POST',
       data: newdata,
-      success: (data) => {
-        this.setState({ data: data });
-      },
-
-      error: (xhr, status, err) => {
-        console.error('/api/ratings', status, err.toString());
-      },
+      success: (data) => { this.setState({ data: data }); },
+      error: (xhr, status, err) => { console.error('/api/ratings', status, err.toString()); },
     });
   }
   render() {
@@ -38,7 +30,6 @@ export default class RatingDisplay extends Component {
       )
      );
     }, this);
-
     return (
     <Table>
       <thead>
