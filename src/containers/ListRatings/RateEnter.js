@@ -4,12 +4,31 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { Form, Col } from 'react-bootstrap';
 import Helmet from 'react-helmet';
 const hStyle = { paddingLeft: '20%' };
+let status = 'Rate';
 
 export default class RatingForm extends Component {
-  static propTypes = { onRatingSubmit: React.PropTypes.func };
+  static propTypes = { onRatingSubmit: React.PropTypes.func, newData: React.PropTypes.array};
   constructor() {
     super();
-    this.state = { email: '', rating: '', desc: '', descleng: 256 };
+    this.state = { timestamp: '', email: '', rating: '', desc: '', descleng: 256, type: 'write', action: ''};
+  }
+  componentWillReceiveProps(nextprops) {
+    if (this.props.newData !== nextprops.newData) {
+      nextprops.newData[0].action = 'edit';
+      this.setState({ timestamp: nextprops.newData[0].timestamp,
+                      email: nextprops.newData[0].email,
+                      rating: nextprops.newData[0].rating,
+                      desc: nextprops.newData[0].desc,
+                      type: 'update',
+                      action: 'edit',
+                      descleng: 256 - (nextprops.newData[0].desc.length)
+                    });
+      status = 'Save';
+      document.getElementsByClassName('idrating')[0].value = nextprops.newData[0].rating;
+      document.getElementsByClassName('idemail')[0].value = nextprops.newData[0].email;
+      document.getElementsByClassName('iddesc')[0].value = nextprops.newData[0].desc;
+      document.getElementsByClassName('buttonboot')[0].innerHTML = status;
+    }
   }
   getValidationStateEmail() {
     const regmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,10 +59,12 @@ export default class RatingForm extends Component {
     obj.preventDefault();
     if (this.getValidationStateEmail() === 'error') { return false; }
     if (this.getValidationStateRate() === 'error') { return false; }
-    const ratingdata = { email: this.state.email, rating: this.state.rating, desc: this.state.desc };
+    const ratingdata = { timestamp: this.state.timestamp, email: this.state.email, rating: this.state.rating, desc: this.state.desc, type: this.state.type, action: this.state.action };
     this.props.onRatingSubmit(ratingdata);
     document.getElementById('form').reset();
-    this.setState({ email: '', rating: '', desc: '', descleng: 256 });
+    this.setState({ timestamp: '', email: '', rating: '', desc: '', descleng: 256, type: 'write', action: '' });
+    status = 'Rate';
+    document.getElementsByClassName('buttonboot')[0].innerHTML = status;
   }
 
   render() {
@@ -56,7 +77,7 @@ export default class RatingForm extends Component {
             Email
           </Col>
           <Col sm={5}>
-            <FormControl type="text" email={this.state.email} placeholder="Email" onChange={this.handleChangeEmail.bind(this)} />
+            <FormControl type="text" className="idemail" email={this.state.email} placeholder="Email" onChange={this.handleChangeEmail.bind(this)} />
           <FormControl.Feedback />
           </Col>
         </FormGroup>
@@ -65,7 +86,7 @@ export default class RatingForm extends Component {
             Rating
           </Col>
           <Col sm={5}>
-            <FormControl type="text" rating={this.state.rating} placeholder="Rating" onChange={this.handleChangeRate.bind(this)} />
+            <FormControl type="text" className="idrating" rating={this.state.rating} placeholder="Rating" onChange={this.handleChangeRate.bind(this)} />
            <FormControl.Feedback />
           </Col>
         </FormGroup>
@@ -74,13 +95,13 @@ export default class RatingForm extends Component {
             Description
           </Col>
           <Col sm={10}>
-            <textarea rows="4" cols="62" maxLength="256" onChange={this.handleChangeText.bind(this)} placeholder="Description" />
+            <textarea rows="4" cols="62" maxLength="256" className="iddesc" onChange={this.handleChangeText.bind(this)} placeholder="Description" />
             {this.state.descleng}
           </Col>
         </FormGroup>
         <FormGroup>
           <Col smOffset={2} sm={10}>
-            <Button bsStyle="primary" type="submit">
+            <Button className="buttonboot" bsStyle="primary" type="submit">
               Rate
             </Button>
           </Col>

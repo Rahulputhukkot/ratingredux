@@ -6,7 +6,7 @@ import $$ from 'jquery';
 export default class ListRatings extends Component {
   constructor() {
     super();
-    this.state = { data: [] };
+    this.state = { data: [], newData: [] };
   }
 
   componentDidMount() {
@@ -32,7 +32,6 @@ export default class ListRatings extends Component {
   handleRatingSubmit(rating) {
     const rates = this.state.data;
     const newRates = rates.concat([rating]);
-    rating.type = 'write';
     this.setState({ data: newRates });
     $$.ajax({
       url: '/api/ratings',
@@ -44,11 +43,15 @@ export default class ListRatings extends Component {
     });
   }
 
+  handleRatingEdit(rating) {
+    this.setState({ newData: rating });
+  }
+
   render() {
     return (
       <div>
-        <RateEnter onRatingSubmit={this.handleRatingSubmit.bind(this)} />
-        <RateDisplay data={this.state.data} />
+        <RateEnter newData={this.state.newData} onRatingSubmit={this.handleRatingSubmit.bind(this)} />
+        <RateDisplay data={this.state.data} onRatingEdit={this.handleRatingEdit.bind(this)}/>
       </div>
     );
   }

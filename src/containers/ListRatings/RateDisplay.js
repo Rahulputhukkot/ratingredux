@@ -3,10 +3,11 @@ import { Button, Table } from 'react-bootstrap';
 import jquery from 'jquery';
 
 export default class RatingDisplay extends Component {
-  static propTypes = { data: React.PropTypes.array };
+  static propTypes = { data: React.PropTypes.array, onRatingEdit: React.PropTypes.func };
+
+
   handleDelete(event) {
-    const newdata = { timestamp: event };
-    newdata.type = 'update';
+    const newdata = { timestamp: event, type: 'update', action: 'delete' };
     jquery.ajax({
       url: '/api/ratings',
       dataType: 'json',
@@ -16,15 +17,22 @@ export default class RatingDisplay extends Component {
       error: (xhr, status, err) => { console.error('/api/ratings', status, err.toString()); },
     });
   }
+  handleEdit(event) {
+    const newdata = { timestamp: event.timestamp, type: 'update', action: 'delete',
+                      email: event.email, desc: event.desc, rating: event.rating
+                    };
+    this.props.onRatingEdit([newdata]);
+  }
   render() {
     const itemsdata = [];
     this.props.data.map(function mapFun(ratingdata, key) {
       return (
        itemsdata.push(
          <tr key = {key}>
-           <td>{ratingdata.rating}</td>
-           <td>{ratingdata.email}</td>
-           <td>{ratingdata.desc}</td>
+           <td id = "rating">{ratingdata.rating}</td>
+           <td id = "email">{ratingdata.email}</td>
+           <td id = "desc">{ratingdata.desc}</td>
+           <td><Button bsStyle="info" onClick={this.handleEdit.bind(this, ratingdata)}>Edit</Button></td>
            <td><Button bsStyle="danger" onClick={this.handleDelete.bind(this, ratingdata.timestamp)}>Delete</Button></td>
          </tr>
       )

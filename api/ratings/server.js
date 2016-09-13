@@ -79,6 +79,25 @@ app.post('/api/ratings', function processRatings(req, res) {
         if (!(valueToReturn.timestamp === req.body.timestamp)) {
           updateValue = updateValue + line + '\n';
           newData.push(valueToReturn);
+        } else if (req.body.action === 'edit') {
+          const presentDate = new Date();
+          const dateParts = [
+            presentDate.getFullYear(),
+            presentDate.getMonth(),
+            presentDate.getDate(),
+            presentDate.getHours(),
+            presentDate.getMinutes(),
+            presentDate.getSeconds()
+          ];
+          const valueToSave = {
+            email: req.body.email,
+            rating: req.body.rating,
+            timestamp: `${dateParts[0]}-${dateParts[1]}-${dateParts[2]} ${dateParts[3]}:${dateParts[4]}:${dateParts[5]}`,
+            desc: req.body.desc,
+          };
+          const rowToWrite = Object.values(valueToSave).map(value => encodeURIComponent(value)).join(',');
+          updateValue = updateValue + rowToWrite + '\n';
+          newData.push([valueToSave]);
         }
       });
       fs.writeFile(RATINGS_FILE, updateValue, function writeCallback(writeError) {
