@@ -11,7 +11,9 @@ import {
     LoginSuccess,
     Survey,
     NotFound,
-    ListRatings
+    ListRatings,
+    ListRatingsRedux,
+    TestReactRedux
   } from 'containers';
 
 export default (store) => {
@@ -52,6 +54,8 @@ export default (store) => {
       <Route path="survey" component={Survey}/>
       <Route path="widgets" component={Widgets}/>
       <Route path="listRatings" component={ListRatings}/>
+      <Route path="listRatingsRedux" component={ListRatingsRedux}/>
+      <Route path="test-react-redux" component={TestReactRedux} />
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />

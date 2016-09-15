@@ -8,3 +8,5 @@ export LoginSuccess from './LoginSuccess/LoginSuccess';
 export Survey from './Survey/Survey';
 export NotFound from './NotFound/NotFound';
 export ListRatings from './ListRatings/ListRatings';
+export TestReactRedux from './TestReactRedux';
+export ListRatingsRedux from './ListRatingsRedux/ListRatingsRedux';

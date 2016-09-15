@@ -104,6 +104,9 @@ export default class App extends Component {
               <LinkContainer to="/listRatings">
                 <NavItem eventKey={7}>List Ratings</NavItem>
               </LinkContainer>
+              <LinkContainer to="/listRatingsRedux">
+                <NavItem eventKey={8}>List Ratings Redux</NavItem>
+              </LinkContainer>
             </Nav>
             {user &&
             <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.name}</strong>.</p>}
