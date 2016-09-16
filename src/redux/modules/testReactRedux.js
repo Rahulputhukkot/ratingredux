@@ -12,6 +12,7 @@ export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOAD:
       console.log('LOAD called instantly');
+      console.log(state);
       return {
         ...state,
         loading: true
@@ -25,6 +26,7 @@ export default function reducer(state = initialState, action = {}) {
         data: action.result
       };
     case LOAD_FAIL:
+      console.log('LOAD_FAIL called after delay', action);
       return {
         ...state,
         loading: false,
@@ -37,12 +39,12 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 export function load(dataTodispatch) {
+  console.log('entered dispatch');
   return (dispatch) => dispatch({
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-
     promise: () => new Promise((resolve, reject) => {
-      setTimeout(() => reject(dataTodispatch), 3000);
-      setTimeout(() => resolve(dataTodispatch), 5000);
+      setTimeout(() => resolve(dataTodispatch), 3000);
+      setTimeout(() => reject(dataTodispatch), 5000);
     })
   });
 }

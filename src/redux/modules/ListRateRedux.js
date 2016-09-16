@@ -1,49 +1,38 @@
-import { combineReducers } from 'redux';
-import { createStore } from 'redux';
 
-const ADD_DATA = 'ListRateRedux/ADD_DATA';
-const Countervalue = 0;
+const ADD = 'ListRateRedux/ADD';
+const ADD_SUCCESS = 'ListRateRedux/ADD_SUCCESS';
 
 const initialState = {
-  count: Countervalue,
+  count: 0,
   ratings: [],
 };
 
-function adddata(state, action) {
+export default function reducer(state = initialState, action = {}) {
+  const {count} = state;
   switch (action.type) {
-    case ADD_DATA:
+    case ADD:
       return {
-        count: action.count,
-        ratings: action.ratings,
+        ...state,
+        count: count + 1
+      };
+    case ADD_SUCCESS:
+      return {
+        ...state,
+        ratings: [
+          ...state.ratings,
+          action.result
+        ]
       };
     default:
       return state;
   }
 }
 
-export default function reducer(state = initialState, action = {}) {
-  console.log('Data Added Successfully');
-  console.log(action);
-  console.log(state);
-  switch (action.type) {
-    case ADD_DATA:
-      return [
-        ...state,
-        adddata(undefined, action),
-      ];
-    default:
-      return state;
-  }
-}
-
 export function load(dataTodispatch) {
-  console.log('Inside load');
-  console.log(dataTodispatch);
-  const { dispatch } = this.props;
-  dispatch({
-    type: ADD_DATA,
-    count: Countervalue + 1,
-    dataTodispatch,
+  return (dispatch) => dispatch({
+    types: [ADD, ADD_SUCCESS],
+    promise: () => new Promise((resolve) => {
+      resolve(dataTodispatch);
+    })
   });
-  createStore(combineReducers(reducer));
 }

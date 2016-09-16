@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import RateEnter from './RateEnter';
-// import RateDisplay from './RateDisplay';
+import RateDisplay from './RateDisplay';
 import { connect } from 'react-redux';
 import { load } from 'redux/modules/ListRateRedux.js';
 
@@ -17,35 +17,32 @@ export default class ListRatings extends Component {
   };
   constructor() {
     super();
-    this.state = { data: [], newData: [] };
+    this.state = { data: [] };
   }
 
-  // componentDidMount() {
-  //   this.loadRatingFromServer();
-  // }
-  //
-  // componentDidUpdate() {
-  //   this.loadRatingFromServer();
-  // }
-  //
-  // loadRatingFromServer() {
-  //   const newData = JSON.stringify(this.props.formData);
-  //   this.setState({ data: newData });
-  // }
+  componentWillMount() {
+    this.loadRatingFromServer();
+  }
+
+  componentDidUpdate() {
+    this.loadRatingFromServer();
+  }
+
+  loadRatingFromServer() {
+    const newData = this.props.formData.ratings;
+    console.log(newData);
+    this.setState({ data: newData });
+  }
 
   handleRatingSubmit(rating) {
-    const rates = this.state.data;
-    const newRates = rates.concat([rating]);
     this.props.loadDataToStore(rating);
-    this.setState({ data: newRates });
   }
-
 
   render() {
     return (
       <div>
         <RateEnter onRatingSubmit={this.handleRatingSubmit.bind(this)} />
-        {/* <RateDisplay data={this.state.data} /> */}
+        <RateDisplay data={this.state.data} />
       </div>
     );
   }
