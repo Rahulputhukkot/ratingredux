@@ -10,7 +10,24 @@ export default class RatingForm extends Component {
   static propTypes = { onRatingSubmit: React.PropTypes.func, newData: React.PropTypes.array};
   constructor() {
     super();
-    this.state = { timestamp: '', email: '', rating: '', desc: '', descleng: 256, type: 'write', action: ''};
+    this.state = { timestamp: '', email: '', rating: '', desc: '', descleng: 256, type: 'write' };
+  }
+  componentWillReceiveProps(nextprops) {
+    if (this.props.newData !== nextprops.newData) {
+      nextprops.newData[0].type = 'edit';
+      this.setState({ timestamp: nextprops.newData[0].timestamp,
+                      email: nextprops.newData[0].email,
+                      rating: nextprops.newData[0].rating,
+                      desc: nextprops.newData[0].desc,
+                      type: 'edit',
+                      descleng: 256 - (nextprops.newData[0].desc.length)
+                    });
+      status = 'Save';
+      document.getElementsByClassName('idrating')[0].value = nextprops.newData[0].rating;
+      document.getElementsByClassName('idemail')[0].value = nextprops.newData[0].email;
+      document.getElementsByClassName('iddesc')[0].value = nextprops.newData[0].desc;
+      document.getElementsByClassName('buttonboot')[0].innerHTML = status;
+    }
   }
   getValidationStateEmail() {
     const regmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -41,10 +58,22 @@ export default class RatingForm extends Component {
     obj.preventDefault();
     if (this.getValidationStateEmail() === 'error') { return false; }
     if (this.getValidationStateRate() === 'error') { return false; }
-    const ratingdata = { timestamp: this.state.timestamp, email: this.state.email, rating: this.state.rating, desc: this.state.desc, type: this.state.type, action: this.state.action };
+    const presentDate = new Date();
+    const dateParts = [
+      presentDate.getFullYear(),
+      presentDate.getMonth(),
+      presentDate.getDate(),
+      presentDate.getHours(),
+      presentDate.getMinutes(),
+      presentDate.getSeconds()
+    ];
+    const ratingdata = { timestamp: `${dateParts[0]}-${dateParts[1]}-${dateParts[2]} ${dateParts[3]}:${dateParts[4]}:${dateParts[5]}`, email: this.state.email, rating: this.state.rating, desc: this.state.desc, type: this.state.type };
+    if (this.state.type === 'edit') {
+      ratingdata.oldtimestamp = this.state.timestamp;
+    }
     this.props.onRatingSubmit(ratingdata);
     document.getElementById('form').reset();
-    this.setState({ timestamp: '', email: '', rating: '', desc: '', descleng: 256, type: 'write', action: '' });
+    this.setState({ timestamp: '', email: '', rating: '', desc: '', descleng: 256, type: 'write' });
     status = 'Rate';
     document.getElementsByClassName('buttonboot')[0].innerHTML = status;
   }

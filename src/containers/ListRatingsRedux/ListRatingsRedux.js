@@ -3,24 +3,27 @@ import RateEnter from './RateEnter';
 import RateDisplay from './RateDisplay';
 import { connect } from 'react-redux';
 import { load } from 'redux/modules/ListRateRedux.js';
+import { edit } from 'redux/modules/ListRateRedux.js';
 
 @connect((globalState) => ({
   formData: globalState.ListRateRedux
 }), {
-  loadDataToStore: load
+  loadDataToStore: load,
+  editDataInStore: edit
 })
 
 export default class ListRatings extends Component {
   static propTypes = {
     formData: React.PropTypes.object,
-    loadDataToStore: React.PropTypes.func
+    loadDataToStore: React.PropTypes.func,
+    editDataInStore: React.PropTypes.func
   };
   constructor() {
     super();
-    this.state = { data: [] };
+    this.state = { data: [], newData: [] };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadRatingFromServer();
   }
 
@@ -30,19 +33,30 @@ export default class ListRatings extends Component {
 
   loadRatingFromServer() {
     const newData = this.props.formData.ratings;
-    console.log(newData);
-    this.setState({ data: newData });
+    if (newData !== this.state.data) {
+      this.setState({ data: newData });
+    }
   }
 
   handleRatingSubmit(rating) {
-    this.props.loadDataToStore(rating);
+    if (rating.type === 'write') {
+      this.props.loadDataToStore(rating);
+    } else {
+      this.props.editDataInStore(rating);
+    }
+    const newData = this.props.formData.ratings;
+    this.setState({ data: newData });
+  }
+
+  handleRatingEdit(rating) {
+    this.setState({ newData: rating });
   }
 
   render() {
     return (
       <div>
-        <RateEnter onRatingSubmit={this.handleRatingSubmit.bind(this)} />
-        <RateDisplay data={this.state.data} />
+        <RateEnter newData={this.state.newData} onRatingSubmit={this.handleRatingSubmit.bind(this)} />
+        <RateDisplay data={this.state.data} onRatingEdit={this.handleRatingEdit.bind(this)}/>
       </div>
     );
   }
